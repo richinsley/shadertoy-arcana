@@ -61,7 +61,7 @@ class ShadertoyRenderer:
         frame_array = np.asarray(frame_data)
         
         # Convert BGRA to RGBA using numpy's array operations
-        frame_array = frame_array[..., [2, 1, 0, 3]]  # Reorder channels efficiently
+        # frame_array = frame_array[..., [2, 1, 0, 3]]  # Reorder channels efficiently
 
         # Create a numpy array view of the shared memory with metadata
         shared_array = self.create_numpy_view(shm)

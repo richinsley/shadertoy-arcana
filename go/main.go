@@ -92,9 +92,10 @@ func closeShadertoyContext(ctx uint64) {
 }
 
 //export createShadertoyContext
-func createShadertoyContext(width, height int, shaderid *C.char) uint64 {
+func createShadertoyContext(width, height int, shaderid *C.char, apikey *C.char) uint64 {
 	// Convert C string to Go string
 	goShaderID := C.GoString(shaderid)
+	goAPIKey := C.GoString(apikey)
 
 	ctx := &ShadertoyContext{
 		Repl:   nil,
@@ -138,7 +139,7 @@ func createShadertoyContext(width, height int, shaderid *C.char) uint64 {
 	fmt.Println(retv)
 
 	// set the SHADERTOY_KEY environment variable
-	retv, err = repl.Execute("os.environ['SHADERTOY_KEY'] = 'rt8lR1'", true)
+	retv, err = repl.Execute(fmt.Sprintf("os.environ['SHADERTOY_KEY'] = '%s'", goAPIKey), true)
 	if err != nil {
 		fmt.Printf("Error executing code: %v\n", err)
 		return 0
@@ -306,8 +307,11 @@ func main() {
 	}
 	fmt.Println(retv)
 
+	// get the SHADERTOY_KEY environment variable from the system
+	key := os.Getenv("SHADERTOY_KEY")
+
 	// set the SHADERTOY_KEY environment variable
-	retv, err = repl.Execute("os.environ['SHADERTOY_KEY'] = 'rt8lR1'", true)
+	retv, err = repl.Execute(fmt.Sprintf("os.environ['SHADERTOY_KEY'] = '%s'", key), true)
 	if err != nil {
 		fmt.Printf("Error executing code: %v\n", err)
 		return

@@ -46,6 +46,7 @@ typedef struct ShadertoyContext {
     int frame_index;
     uint64_t py_context;
     char *shaderid;
+    char *apikey;
 } ShadertoyContext;
 
 #define OFFSET(x) offsetof(ShadertoyContext, x)
@@ -57,6 +58,7 @@ static const AVOption shadertoy_options[] = {
     {"rate", "set frame rate", OFFSET(frame_rate), AV_OPT_TYPE_VIDEO_RATE, {.str="30"},      0,    INT_MAX, FLAGS },
     {"r",    "set frame rate", OFFSET(frame_rate), AV_OPT_TYPE_VIDEO_RATE, {.str="30"},      0,    INT_MAX, FLAGS },
     {"shaderid", "set shader ID", OFFSET(shaderid), AV_OPT_TYPE_STRING, {.str="XsBXWt"},     0,          0, FLAGS },
+    {"apikey", "set API key", OFFSET(apikey), AV_OPT_TYPE_STRING, {.str=""},     0,          0, FLAGS },
     {NULL},
 };
 
@@ -135,7 +137,11 @@ static int shadertoy_init(AVFilterContext *ctx)
     ShadertoyContext *s = ctx->priv;
 
     // set up the Python REPL context for shadertoy
-    s->py_context = createShadertoyContext(s->w, s->h, s->shaderid);
+    if(s->apikey == 0 || s->apikey[0] == 0) {
+        av_log(ctx, AV_LOG_ERROR, "Shadertoy API key must be set\n");
+        return AVERROR(EINVAL);
+    }
+    s->py_context = createShadertoyContext(s->w, s->h, s->shaderid, s->apikey);
     if(s->py_context == 0) {
         return AVERROR(EINVAL);
     }

@@ -7,7 +7,9 @@ find_package(PkgConfig REQUIRED)
 set(ENV{PKG_CONFIG_PATH} "${ARCANA_PREFIX}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 
 # Find all the required libraries using pkg-config
-pkg_check_modules(ARCANA REQUIRED
+# Use IMPORTED_TARGET to create proper targets
+pkg_check_modules(ARCANA IMPORTED_TARGET
+    libavfilter_arcana
     libswscale_arcana
     libpostproc_arcana
     libavformat_arcana
@@ -22,16 +24,29 @@ add_library(shadertoyarcana SHARED arcana_loader.c vf_shadertoy_arcana.c)
 # Add dependency on the Go library
 add_dependencies(shadertoyarcana shadertoyarcana_go)
 
-# Set include directories and link libraries
+# Set include directories
 target_include_directories(shadertoyarcana PRIVATE 
     ${ARCANA_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}/go  # For the generated Go header
 )
 
-target_link_directories(shadertoyarcana PRIVATE ${ARCANA_LIBRARY_DIRS})
-target_link_libraries(shadertoyarcana PRIVATE 
+# Base libraries
+set(LINK_LIBS
     ${CMAKE_BINARY_DIR}/go/libshadertoyarcana_go.a
-    ${ARCANA_LINK_LIBRARIES}
+)
+
+# Add macOS frameworks needed by Go
+if(APPLE)
+    list(APPEND LINK_LIBS
+        "-framework CoreFoundation"
+        "-framework Security"
+    )
+endif()
+
+# Link against the imported pkg-config targets
+target_link_libraries(shadertoyarcana PRIVATE 
+    ${LINK_LIBS}
+    PkgConfig::ARCANA
 )
 
 # Add runtime library search path
