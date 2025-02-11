@@ -1,0 +1,6 @@
+github.com/richinsley/jumpboot v0.0.0-20241211223855-d93a704d8233 h1:Fv2Nd0FIfUPXNi1b1BxoMng8ZbSa9F3oI4zR5kUzdOE=
+github.com/richinsley/jumpboot v0.0.0-20241211223855-d93a704d8233/go.mod h1:wuI/kqE88trSHxRbO4Xq2B/CfDXSpB3594XNmfVTSbg=
+golang.org/x/image v0.24.0 h1:AN7zRgVsbvmTfNyqIbbOraYL8mSwcKncEj8ofjgzcMQ=
+golang.org/x/image v0.24.0/go.mod h1:4b/ITuLfqYq1hqZcjofwctIhi7sZh2WaCjvsBNjjya8=
+golang.org/x/sys v0.24.0 h1:Twjiwq9dn6R1fQcyiK+wQyHWfaz/BJB+YIpzU/Cv3Xg=
+golang.org/x/sys v0.24.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
